@@ -10,7 +10,7 @@ import Pagination from "@/components/shared/Pagination";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Collections | Dev Overflow",
+  title: "Collections | Square Overflow",
   description:
     "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate withe developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
   icons: {
