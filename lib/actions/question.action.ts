@@ -16,6 +16,7 @@ import User from "@/database/user.modal";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.modal";
 import Interaction from "@/database/interaction.modal";
+import Notification from "@/database/notification.modal";
 import { FilterQuery } from "mongoose";
 
 export async function createQuestion(params: CreateQuestionParams) {
@@ -49,6 +50,7 @@ export async function createQuestion(params: CreateQuestionParams) {
       $push: { tags: { $each: tagDocuments } },
     });
 
+
     await Interaction.create({
       user: author,
       action: "ask_question",
@@ -57,7 +59,17 @@ export async function createQuestion(params: CreateQuestionParams) {
     });
 
     await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
+    const authorFindet = await User.findById(author);
 
+    const users = await User.find({});
+    const usersFilterd = users.filter(user=>!user._id.equals(author));
+    for(const user of usersFilterd){
+      await Notification.create({
+        user: user._id,
+        content: `New Question: ${question.title} from @${authorFindet.username}`,
+        link: `/question/${question._id}`,
+      });
+    }
     revalidatePath(path);
   } catch (error) {
     console.log(error);

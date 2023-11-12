@@ -3,11 +3,18 @@ import LeftSidebar from "@/components/shared/LeftSidebar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Navbar from "@/components/shared/navbar/Navbar";
 import { Toaster } from "@/components/ui/toaster";
+import { auth } from "@clerk/nextjs";
+import { getUserById } from "@/lib/actions/user.action";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const {userId:clerkId} = auth();
+  let mongoUser;
+  if(clerkId){
+     mongoUser = await getUserById({userId:clerkId});
+   }
   return (
     <main className="background-light850_dark100 relative">
-      <Navbar />
+      <Navbar user={JSON.stringify(mongoUser)} />
       <div className="flex">
         <LeftSidebar />
         <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-36 max-md:pb-14 sm:px-14">

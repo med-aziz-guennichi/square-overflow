@@ -7,8 +7,9 @@ import { SignedIn, UserButton } from "@clerk/nextjs";
 import Theme from "./Theme";
 import MobileNav from "./MobileNav";
 import GlobalSearch from "../search/GlobalSearch";
+import Notification from "./Notification";
 
-const Navbar = () => {
+const Navbar = ({user}:any) => {
   return (
     <nav className="flex-between background-light900_dark200 fixed z-50 w-full gap-5 p-6 shadow-light-300 dark:shadow-none sm:px-12">
       <Link href="/" className="flex items-center gap-1">
@@ -27,6 +28,7 @@ const Navbar = () => {
       <GlobalSearch />
 
       <div className="flex-between gap-5">
+        <Notification user={user} />
         <Theme />
 
         <SignedIn>

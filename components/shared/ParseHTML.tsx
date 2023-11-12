@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import Prism from "prismjs";
 import parse from "html-react-parser";
@@ -27,17 +27,41 @@ import "prismjs/components/prism-sql";
 import "prismjs/components/prism-mongodb";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
+import { toast } from "../ui/use-toast";
 
 interface Props {
   data: string;
 }
 
 const ParseHTML = ({ data }: Props) => {
+  const divRef = useRef<HTMLDivElement>(null);
+
+  const handleCopyClick = () => {
+    if (divRef.current) {
+      // Select the text content of the div
+      const textToCopy = divRef.current.innerText;
+
+      // Use the Clipboard API to copy the text to the clipboard
+      navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+          return toast({
+            title: 'Copied to clipboard',
+            description: 'The code has been copied to your clipboard.',
+            variant: 'default',
+          })
+        })
+        .catch((error) => {
+          console.error('Unable to copy to clipboard', error);
+        });
+    }
+  };
+
   useEffect(() => {
     Prism.highlightAll();
   }, []);
 
-  return <div className="markdown w-full min-w-full">{parse(data)}</div>;
+  return <div className="markdown w-full min-w-full hover:scale-105 transition-transform cursor-pointer" ref={divRef}
+  onClick={handleCopyClick}>{parse(data)}</div>;
 };
 
 export default ParseHTML;

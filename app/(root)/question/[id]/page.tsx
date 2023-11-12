@@ -11,6 +11,10 @@ import { auth } from "@clerk/nextjs";
 import { getUserById } from "@/lib/actions/user.action";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Votes from "@/components/shared/Votes";
+import { Badge } from "@/components/ui/badge"
+import NotFoundPage from "@/components/shared/NotFound";
+
+
 
 const QuestionDetails = async ({ params, searchParams }: any) => {
   const { userId: clerkId } = auth();
@@ -21,6 +25,7 @@ const QuestionDetails = async ({ params, searchParams }: any) => {
   }
 
   const result = await getQuestionById({ questionId: params.id });
+  if(!result) return <NotFoundPage />;
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -44,12 +49,12 @@ const QuestionDetails = async ({ params, searchParams }: any) => {
           <div className="flex justify-end">
             <Votes
               type="Question"
-              itemId={JSON.stringify(result._id)}
-              userId={JSON.stringify(mongoUser._id)}
+              itemId={result && JSON.stringify(result._id)}
+              userId={mongoUser && JSON.stringify(mongoUser._id)}
               upvotes={result.upvotes.length}
-              hasupVoted={result.upvotes.includes(mongoUser._id)}
+              hasupVoted={result.upvotes.includes(mongoUser && mongoUser._id)}
               downvotes={result.downvotes.length}
-              hasdownVoted={result.downvotes.includes(mongoUser._id)}
+              hasdownVoted={result.downvotes.includes(mongoUser && mongoUser._id)}
               hasSaved={mongoUser?.saved.includes(result._id)}
             />
           </div>
@@ -101,15 +106,25 @@ const QuestionDetails = async ({ params, searchParams }: any) => {
 
       <AllAnswers
         questionId={result._id}
-        userId={mongoUser._id}
+        userId={mongoUser && mongoUser._id}
         totalAnswers={result.answers.length}
         filter={searchParams?.filter}
       />
-      <Answer
-        question={result.content}
-        questionId={JSON.stringify(result._id)}
-        authorId={JSON.stringify(mongoUser._id)}
-      />
+      {
+        mongoUser ? (
+          <Answer
+            question={result.content}
+            questionId={JSON.stringify(result._id)}
+            authorId={mongoUser && JSON.stringify(mongoUser._id)}
+          />
+        ) : (
+          <>
+           <Badge className="subtle-regular background-light900_dark300 text-light400_light500 rounded-md border-none px-4 py-2 uppercase">
+            You need to Sign in to answer
+           </Badge>
+          </>
+        )
+      }
     </>
   );
 };

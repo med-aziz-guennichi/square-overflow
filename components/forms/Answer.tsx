@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 "use client";
 
 import {
@@ -68,7 +69,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
 
     setIsSubmittingAI(true);
 
-    try {
+    try {      
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
         {
@@ -78,8 +79,9 @@ const Answer = ({ question, questionId, authorId }: Props) => {
       );
 
       const aiAnswer = await response.json();
-
-      // Convert plain text into HTML format
+      console.log(aiAnswer);
+      if(aiAnswer){
+         // Convert plain text into HTML format
       const formattedAnswer = aiAnswer.reply.replace(/\n/g, "<br />");
 
       if (editorRef.current) {
@@ -87,6 +89,8 @@ const Answer = ({ question, questionId, authorId }: Props) => {
         editor.setContent(formattedAnswer);
       }
 
+      }
+     
       // @todo -> Toast notifications
     } catch (error) {
       console.log(error);
@@ -102,7 +106,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
           Write your answer here
         </h4>
 
-        <Button
+        {/* <Button
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
           onClick={generateAIAnswer}
         >
@@ -120,7 +124,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
               Generate an AI Answer
             </>
           )}
-        </Button>
+        </Button> */}
       </div>
 
       <Form {...form}>

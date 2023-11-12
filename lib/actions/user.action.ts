@@ -1,7 +1,7 @@
 "use server";
 
 import User from "@/database/user.modal";
-import { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateUserParams,
@@ -234,8 +234,12 @@ export async function getUserInfo(params: GetUserByIdParams) {
     connectToDatabase();
 
     const { userId } = params;
-
-    const user = await User.findOne({ clerkId: userId });
+    let user;
+    if(!mongoose.isValidObjectId(userId)) {
+      user = await User.findOne({ clerkId: userId });
+    }else {
+      user = await User.findById(userId);
+    }
 
     if (!user) {
       throw new Error("User not found!");
