@@ -34,7 +34,7 @@ const Notification = ({user}:any) => {
       await getAllNotification();
     };
     fetchData();
-  }, [userParsed._id, notifClicked]);
+  }, [notifClicked]);
 
   const getAllNotification = async () => {
     const res = await getNotifications(userParsed._id);
