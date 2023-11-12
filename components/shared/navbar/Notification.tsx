@@ -16,7 +16,7 @@ import { getTimestamp } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
   
 
-const Notification = ({user}:any) => {
+export default function Notification({user}:any) {
   if (!user) {
     return null;
   }
@@ -86,5 +86,3 @@ const Notification = ({user}:any) => {
     </>
   )
 }
-
-export default Notification
