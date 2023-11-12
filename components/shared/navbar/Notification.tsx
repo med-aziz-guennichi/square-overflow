@@ -17,30 +17,34 @@ import { Badge } from "@/components/ui/badge";
   
 
 const Notification = ({user}:any) => {
-    if(!user){
-        return null;
+  if (!user) {
+    return null;
+  }
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const userParsed = JSON.parse(user);
+
+  const [notifications, setNotifications] = useState<undefined | any>([]);
+  const [notificationPending, setNotificationPending] = useState<undefined | any>([]);
+  const [notifClicked, setNotifClicked] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getAllNotification();
+    };
+    fetchData();
+  }, [userParsed._id, notifClicked]);
+
+  const getAllNotification = async () => {
+    const res = await getNotifications(userParsed._id);
+    if (!res) {
+      return;
     }
-    const router = useRouter();
-    const pathname = usePathname();
-    const userParsed = JSON.parse(user);
-    const [notifications,setNotifications] = useState<undefined | any>([]);
-    const [notificationPending,setNotificationPending] = useState<undefined | any>([]);
-    const [notifClicked,setNotifClicked] = useState(false);
-    const getAllNotification = async () => {
-        const res = await getNotifications(userParsed._id);
-        if(!res){
-            return;
-        }
-        setNotifications(res);
-        const pending = res.filter((item:any) => item.status === "unshow");
-        setNotificationPending(pending);
-    }
-    useEffect(()=>{
-       const fetchData = async()=>{
-        await getAllNotification()
-       };
-       fetchData();
-    },[userParsed._id,notifClicked]);
+    setNotifications(res);
+    const pending = res.filter((item: any) => item.status === "unshow");
+    setNotificationPending(pending);
+  };
   return (
     <>
       <Menubar className="relative border-none bg-transparent shadow-none ">
