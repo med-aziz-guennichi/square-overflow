@@ -1,3 +1,4 @@
+"use client";
 import Lottie from "lottie-react";
 import preNotification from "@/animations/pre.json";
 import notifNotification from "@/animations/not.json";
@@ -24,7 +25,7 @@ const Notification = ({user}:any) => {
     const userParsed = JSON.parse(user);
     const [notifications,setNotifications] = useState<undefined | any>([]);
     const [notificationPending,setNotificationPending] = useState<undefined | any>([]);
-    const [showCommend,setShowCommend] = useState(false);
+    const [notifClicked,setNotifClicked] = useState(false);
     const getAllNotification = async () => {
         const res = await getNotifications(userParsed._id);
         if(!res){
@@ -39,7 +40,7 @@ const Notification = ({user}:any) => {
         await getAllNotification()
        };
        fetchData();
-    },[userParsed._id,pathname]);
+    },[userParsed._id,notifClicked]);
   return (
     <>
       <Menubar className="relative border-none bg-transparent shadow-none ">
@@ -57,6 +58,7 @@ const Notification = ({user}:any) => {
               key={notif.value}
               className="flex items-center gap-4 px-2.5 py-2 dark:focus:bg-dark-400 cursor-pointer"
               onClick={async() => {
+                setNotifClicked(true);
                 await updateNotification(notif._id,pathname);
                 router.push(notif.link);
               }}
