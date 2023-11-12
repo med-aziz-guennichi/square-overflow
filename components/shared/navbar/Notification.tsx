@@ -27,14 +27,13 @@ export default function Notification({user}:any) {
 
   const [notifications, setNotifications] = useState<undefined | any>([]);
   const [notificationPending, setNotificationPending] = useState<undefined | any>([]);
-  const [notifClicked, setNotifClicked] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       await getAllNotification();
     };
     fetchData();
-  }, [notifClicked]);
+  }, [userParsed._id,pathname]);
 
   const getAllNotification = async () => {
     const res = await getNotifications(userParsed._id);
@@ -62,7 +61,6 @@ export default function Notification({user}:any) {
               key={notif.value}
               className="flex items-center gap-4 px-2.5 py-2 dark:focus:bg-dark-400 cursor-pointer"
               onClick={async() => {
-                setNotifClicked(true);
                 await updateNotification(notif._id,pathname);
                 router.push(notif.link);
               }}
