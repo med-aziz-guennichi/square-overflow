@@ -59,17 +59,18 @@ export default function Notification({user}:any) {
           {notifications.length > 0 ? notifications.map((notif:any) => (
             <MenubarItem
               key={notif.value}
-              className="flex items-center gap-4 px-2.5 py-2 dark:focus:bg-dark-400 cursor-pointer"
+              className="flex items-center gap-4 px-2.5 py-2 dark:focus:bg-dark-400 cursor-pointer border-b border-b-slate-500 xs:w-full sm:w-full"
               onClick={async() => {
                 await updateNotification(notif._id,pathname);
                 router.push(notif.link);
               }}
             >
               <p
-                className={`body-semibold ${notif.status === "show" ? "text-light-700" : "text-light-500"}`}
+                className={`body-semibold ${notif.status === "show" ? "text-light-700" : "text-light-500"} md:text-xs sm:text-xs xs:text-xs`}
               >
                 {notif.content} <Badge>{getTimestamp(notif.createdAt)}</Badge>
               </p>
+              
             </MenubarItem>
           ) ): (
             <p
